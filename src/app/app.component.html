@@ -1,21 +1,48 @@
 <!--The content below is only a placeholder and can be replaced.-->
 <div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
+  <div class="container">
+    <table style="border: 1px solid black;">
+      <thead>
+        <th>Name</th>
+        <th>Artist</th>
+      </thead>
+      <tbody>
+        <tr
+          style="cursor: pointer;"
+          *ngFor="let song of getFiles(); index as i"
+          (click)="openFile(song, i)"
+        >
+          <td>{{ song.name }}</td>
+          <td>{{ song.artist }}</td>
+        </tr>
+      </tbody>
+    </table>
+    <button (click)="play()">Play</button>
+    <button (click)="pause()">Pause</button>
+    <ng-container *ngIf="currentFile && currentFile?.file.type == 'video'">
+      <video
+        #myVideo
+        [src]="currentFile.file.url"
+        (loadedmetadata)="loadedVideo($event)"
+      ></video>
+    </ng-container>
+    <ng-container *ngIf="state?.duration">
+      <div>
+        {{ currentFile?.timerCurrentTime }} /
+        {{ currentFile.timerDuration }}
+      </div>
+      <input
+        (change)="onSliderChange($event)"
+        [(ngModel)]="state.currentTime"
+        (ngModelChange)="rangeChanged($event)"
+        type="range"
+        name="slider"
+        id="media-slider"
+        [max]="state.duration"
+        min="0"
+        step="1"
+      />
+    </ng-container>
+  </div>
+  <!-- <router-outlet></router-outlet> -->
 </div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
-
-<router-outlet></router-outlet>
