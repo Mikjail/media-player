@@ -33,12 +33,12 @@
       </div>
       <input
         (change)="onSliderChange($event)"
-        [(ngModel)]="state.currentTime"
+        [(ngModel)]="currentFile.currentTime"
         (ngModelChange)="rangeChanged($event)"
         type="range"
         name="slider"
         id="media-slider"
-        [max]="state.duration"
+        [max]="currentFile.duration"
         min="0"
         step="1"
       />

@@ -22,6 +22,7 @@ export class MediaPlayerService {
   private audioPlayer= new Audio;
   private videoPlayer: any;
   private mediaType= 'audioPlayer';
+  private seekToTime = 0;
   private state: StreamState = {
     playing: false,
     readableCurrentTime: '',
@@ -66,9 +67,7 @@ export class MediaPlayerService {
   }
 
   seekTo(seconds) {
-
     this[this.mediaType].currentTime =  parseFloat(seconds);
-    console.log( this[this.mediaType].currentTime)
   }
 
   formatTime(time: number, format: string = "HH:mm:ss") {
@@ -76,15 +75,17 @@ export class MediaPlayerService {
     return moment.utc(momentTime).format(format);
   }
 
-  private streamObservable(file, videoElement?) {
+  private streamObservable(file, videoElement?, valueToSeek?) {
    return new Observable(observer => {
       this.mediaType = `${file.type}Player`;
       if(file.type == 'video'){
+        this[this.mediaType].currentTime = valueToSeek || 0;
         this[this.mediaType] = videoElement
         this[this.mediaType].play();
       }else{
         // Play audio
         this.audioPlayer.src =file.url;
+        this.audioPlayer.currentTime = valueToSeek || 0;
         this.audioPlayer.load();
         this.audioPlayer.play();
       }
@@ -108,7 +109,7 @@ export class MediaPlayerService {
       };
     });
   }
-  private loadStreamObservable(file, videoElement) {
+  private loadStreamObservable(file, videoElement,valueToSeek?) {
     return new Observable(observer => {
       this.mediaType = `${file.type}Player`;
       if(file.type == 'video'){
@@ -116,6 +117,7 @@ export class MediaPlayerService {
       }else{
         // Load audio
         this.audioPlayer.src =file.url;
+        this.audioPlayer.currentTime = valueToSeek || 0;
         this.audioPlayer.load();
       }
  
@@ -152,12 +154,12 @@ export class MediaPlayerService {
     });
   }
   
-  playStream(file, videoElement?) {
-    return this.streamObservable(file, videoElement).pipe(takeUntil(this.stop$));
+  playStream(file, videoElement?, valueToSeek?) {
+    return this.streamObservable(file, videoElement, valueToSeek).pipe(takeUntil(this.stop$));
   }
 
-  openFile(file, element?) {
-    return this.loadStreamObservable(file, element).pipe(takeUntil(this.stop$));
+  openFile(file, element?, valueToSeek?) {
+    return this.loadStreamObservable(file, element, valueToSeek).pipe(takeUntil(this.stop$));
   }
 
   private updateStateEvents(event: Event): void {
