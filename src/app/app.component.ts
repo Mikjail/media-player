@@ -38,6 +38,7 @@ export class AppComponent {
           this.state = Object.assign({},state);
           if(this.currentFile.index === 0){
             this.currentFile.timerCurrentTime =this.mediaPlayerService.formatTime(state.currentTime);
+            this.currentFile.currentTime = state.currentTime;
           }else{
             if(this.chunkMap[this.currentFile.index]){
               // this.currentFile.timerCurrentTime = this.mediaPlayerService.formatTime(this.chunkMap[this.currentFile.index].duration - this.currentFile.currentTime); 
